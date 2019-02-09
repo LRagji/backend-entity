@@ -50,7 +50,7 @@ class filterQueryParserPg {
             }
         });
 
-        return whereClause;
+        return whereClause === "" ? "" : ("where " + whereClause);
 
     }
 
@@ -72,7 +72,7 @@ class filterQueryParserPg {
             }
         });
 
-        return orderClause;
+        return orderClause === "" ? "" : ("order by " + orderClause);
 
     }
 
