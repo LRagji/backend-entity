@@ -1,0 +1,25 @@
+{
+  "name": "filter-query-parser-pg",
+  "version": "0.0.1",
+  "description": "This packages converts JSON string into pg sql queries; used for client side filter and on server execution",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LRagji/filter-query-parser-pg.git"
+  },
+  "keywords": [
+    "filter",
+    "pg",
+    "query-builder",
+    "parser"
+  ],
+  "author": "Laukik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LRagji/filter-query-parser-pg/issues"
+  },
+  "homepage": "https://github.com/LRagji/filter-query-parser-pg#readme"
+}
