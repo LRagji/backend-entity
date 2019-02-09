@@ -34,7 +34,7 @@ class filterQueryParserPg {
                     break;
                 case 'like':
                     Object.keys(filterObject[operator]).forEach((operand) => {
-                        whereClause += (whereClause === "" ? "" : " and ") + " lower(" + this._[operand] + ") " + this._operatorMap[operator] + " $" + (argumentArray.length + 1);
+                        whereClause += (whereClause === "" ? "" : " and ") + " lower(" + this._propertyMap[operand] + ") " + this._operatorMap[operator] + " $" + (argumentArray.length + 1);
                         argumentArray.push("%" + filterObject[operator][operand].toLowerCase() + "%");
                     });
                     break;
