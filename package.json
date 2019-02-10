@@ -1,5 +1,5 @@
 {
-  "name": "filter-query-parser-pg",
+  "name": "backend-entity",
   "version": "0.0.1",
   "description": "This packages converts JSON string into pg sql queries; used for client side filter and on server execution",
   "main": "index.js",

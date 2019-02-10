@@ -1,4 +1,5 @@
 module.exports = {
     filterBuilder: require('./filterbuilder'),
-    filterQueryParserPg: require('./filterqueryparserpg')
+    filterQueryParserPg: require('./filterqueryparserpg'),
+    entity: require('./entity'),
 }
