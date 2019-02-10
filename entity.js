@@ -1,5 +1,5 @@
-let fpType = require('./filterqueryparserpg').filterQueryParserPg;
-let fbType = require('./filterbuilder').filterBuilder;
+let fpType = require('./filterqueryparserpg');
+let fbType = require('./filterbuilder');
 
 class entity {
     constructor(entityName, entityPropertiesMap, pgPool) {
