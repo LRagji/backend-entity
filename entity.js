@@ -4,7 +4,7 @@ let fbType = require('./filterbuilder');
 class entity {
     constructor(entityName, entityPropertiesMap, pgPool) {
         this._tableName = entityName;
-        this._columns = entityPropertiesMap; //Array of { name: propertyName, type: sqlColumnName } TODO:Always add id as system generated column
+        this._columns = this._convertKeysToLowerCase(entityPropertiesMap); //Array of { name: propertyName, type: sqlColumnName } TODO:Always add id as system generated column
         this._queryBuilder = new fpType(entityPropertiesMap);
         this._pgPool = pgPool;
         let operatorMap = {
@@ -25,6 +25,9 @@ class entity {
         this.readEntitiesById = this.readEntitiesById.bind(this);
 
         this._constructUpdateClause = this._constructUpdateClause.bind(this);
+        this._convertKeysToLowerCase = this._convertKeysToLowerCase.bind(this);
+
+        if (Object.keys(this._columns).length <= 0) throw new Error("No columns defined for " + this._tableName + ", for insert operation.");
     }
 
     async createEntity(propertiesNamesAndValues) {
@@ -32,14 +35,11 @@ class entity {
         let columnsValues = [];
         let valuesCommand = "values(";
 
-        if (Object.keys(this._columns).length <= 0) throw new Error("No columns defined for " + this._tableName + ", for insert operation.");
-
         Object.entries(propertiesNamesAndValues).forEach(kvp => {
-            let columnName = kvp[0], columnvalue = kvp[1];
-            let column = Object.keys(this._columns).filter(e => e.toLowerCase() === columnName.toLowerCase())
-            if (column.length <= 0) throw new Error("No column defination for " + columnName + ", Please define column for same.");
-            column = column[0];
-            insertQuery += ' "' + columnName + '",';
+            let columnName = kvp[0].toLowerCase(), columnvalue = kvp[1];
+            let sqlColumn = this._columns[columnName];
+            if (sqlColumn === undefined) throw new Error("No column defination for " + columnName + ", Please define column for same.");
+            insertQuery += ' ' + sqlColumn + ',';
             valuesCommand += " $" + (columnsValues.length + 1) + ",";
             columnsValues.push(columnvalue);
         });
@@ -59,16 +59,13 @@ class entity {
         id = parseInt(id);
         let updateQuery = 'update "' + this._tableName + '" set';
         let columnsValues = [];
-        let columNames = Object.keys(this._columns).map(e => e.toLowerCase());
-
-        if (columNames.length <= 0) throw new Error("No columns defined for " + this._tableName + ", for update operation.");
 
         Object.entries(propertiesNamesAndValues).forEach(kvp => {
-            updateQuery += this._constructUpdateClause(kvp[0], kvp[1], " ", columNames, columnsValues);
+            updateQuery += this._constructUpdateClause(kvp[0].toLowerCase(), kvp[1], " ", columnsValues);
         });
         updateQuery = updateQuery.substring(0, updateQuery.length - 1);
 
-        updateQuery += this._constructUpdateClause("id", id, " where ", columNames, columnsValues)
+        updateQuery += this._constructUpdateClause("id", id, " where ", columnsValues)
         updateQuery = updateQuery.substring(0, updateQuery.length - 1);
         updateQuery += " RETURNING *";
 
@@ -125,14 +122,21 @@ class entity {
             return undefined;
     }
 
-    _constructUpdateClause(columnName, columnvalue, prefixString, columnNamesArray, argumentArray) {
+    _constructUpdateClause(columnName, columnvalue, prefixString, argumentArray) {
         let returnClause = prefixString;
-        let idx = columnNamesArray.indexOf(columnName.toLowerCase());
-        if (idx < 0) throw new Error("No column defination for " + columnName + ", Please define column for same.");
-        columnNamesArray.splice(idx, 1);
-        returnClause += '"' + columnName + '" = $' + (argumentArray.length + 1) + ",";
+        let sqlColumnName = this._columns[columnName];
+        if (sqlColumnName === undefined) throw new Error("No column defination for " + columnName + ", Please define column for same.");
+        returnClause += '' + sqlColumnName + ' = $' + (argumentArray.length + 1) + ",";
         argumentArray.push(columnvalue);
         return returnClause;
     }
+
+    _convertKeysToLowerCase(obj) {
+        let output = {};
+        for (let i in obj) {
+            output[i.toLowerCase()] = obj[i];
+        }
+        return output;
+    };
 }
 module.exports = entity;
