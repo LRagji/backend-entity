@@ -23,6 +23,7 @@ class entity {
         this.readAllEntities = this.readAllEntities.bind(this);
         this.readPaginatedEntities = this.readPaginatedEntities.bind(this);
         this.readEntitiesById = this.readEntitiesById.bind(this);
+        this.deleteEntities=this.deleteEntities.bind(this);
 
         this._constructUpdateClause = this._constructUpdateClause.bind(this);
         this._convertKeysToLowerCase = this._convertKeysToLowerCase.bind(this);
@@ -120,6 +121,18 @@ class entity {
             return response.results[0];
         else
             return undefined;
+    }
+
+    async deleteEntities(filterJson)
+    {
+        let argumentArray = [];
+
+        let filterClause = this._queryBuilder.constructWhereClause(filterJson, argumentArray);
+
+        let deleteQuery = 'delete from "' + this._tableName + '" ' + filterClause;
+        let response = await this._pgPool.query(deleteQuery, argumentArray);
+
+        return response.rowCount;
     }
 
     _constructUpdateClause(columnName, columnvalue, prefixString, argumentArray) {
