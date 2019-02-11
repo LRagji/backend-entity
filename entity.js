@@ -23,10 +23,11 @@ class entity {
         this.readAllEntities = this.readAllEntities.bind(this);
         this.readPaginatedEntities = this.readPaginatedEntities.bind(this);
         this.readEntitiesById = this.readEntitiesById.bind(this);
-        this.deleteEntities=this.deleteEntities.bind(this);
+        this.deleteEntities = this.deleteEntities.bind(this);
 
         this._constructUpdateClause = this._constructUpdateClause.bind(this);
         this._convertKeysToLowerCase = this._convertKeysToLowerCase.bind(this);
+        this._normalizeColumnName = this._normalizeColumnName.bind(this);
 
         if (Object.keys(this._columns).length <= 0) throw new Error("No columns defined for " + this._tableName + ", for insert operation.");
     }
@@ -92,7 +93,8 @@ class entity {
 
         let fetchedEntities = [];
         response.rows.forEach(row => {
-            let entity = row;
+            let entity = {};
+            Object.keys(this._columns).forEach(propertyName => entity[propertyName] = row[this._normalizeColumnName(this._columns[propertyName])]);
             fetchedEntities.push(entity)
         });
 
@@ -123,8 +125,7 @@ class entity {
             return undefined;
     }
 
-    async deleteEntities(filterJson)
-    {
+    async deleteEntities(filterJson) {
         let argumentArray = [];
 
         let filterClause = this._queryBuilder.constructWhereClause(filterJson, argumentArray);
@@ -150,6 +151,14 @@ class entity {
             output[i.toLowerCase()] = obj[i];
         }
         return output;
-    };
+    }
+
+    _normalizeColumnName(doubleQuotedColumnName) {
+        if (doubleQuotedColumnName.startsWith('"') & doubleQuotedColumnName.endsWith('"') === true) {
+            return doubleQuotedColumnName.substring(1, doubleQuotedColumnName.length - 1);
+        }
+        else
+            return doubleQuotedColumnName;
+    }
 }
 module.exports = entity;
