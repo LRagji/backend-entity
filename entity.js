@@ -37,7 +37,7 @@ class entity {
         let valuesCommand = "values(";
 
         Object.entries(propertiesNamesAndValues).forEach(kvp => {
-            let columnName = kvp[0].toLowerCase(), columnvalue = kvp[1];
+            let columnName = kvp[0], columnvalue = kvp[1];
             let sqlColumn = this._columns[columnName];
             if (sqlColumn === undefined) throw new Error("No column defination for " + columnName + ", Please define column for same.");
             insertQuery += ' ' + sqlColumn + ',';
@@ -61,7 +61,7 @@ class entity {
         let columnsValues = [];
 
         Object.entries(propertiesNamesAndValues).forEach(kvp => {
-            updateQuery += this._constructUpdateClause(kvp[0].toLowerCase(), kvp[1], " ", columnsValues);
+            updateQuery += this._constructUpdateClause(kvp[0], kvp[1], " ", columnsValues);
         });
         updateQuery = updateQuery.substring(0, updateQuery.length - 1);
 
