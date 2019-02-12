@@ -5,6 +5,7 @@ class filterQueryParserPg {
         this._operatorMap = {
             "like": "like",
             "equal": "=",
+            "notequal":"!=",
             "greaterThan": ">",
             "lessThan": "<",
             "ascending": "asc",
@@ -27,6 +28,7 @@ class filterQueryParserPg {
                 case 'equal':
                 case 'greaterThan':
                 case 'lessThan':
+                case 'notequal':
                     Object.keys(filterObject[operator]).forEach((operand) => {
                         whereClause += (whereClause === "" ? "" : " and ") + ' ' + this._propertyMap[operand] + ' ' + this._operatorMap[operator] + " $" + (argumentArray.length + 1);
                         argumentArray.push(filterObject[operator][operand]);

@@ -1,7 +1,16 @@
 export class filterBuilder {
 
-    constructor(operatorMap) {
-
+    constructor() {
+        let operatorMap = {
+            "like": "singleOperand",
+            "equal": "singleOperand",
+            "notequal":"singleOperand",
+            "greaterThan": "singleOperand",
+            "lessThan": "singleOperand",
+            "ascending": "asc",
+            "descending": "desc",
+            "containsArr": "multiOperand"
+        };
         this.addOperatorConditionFor = this.addOperatorConditionFor.bind(this);
         this.removeOperatorConditionFor = this.removeOperatorConditionFor.bind(this);
         this.sortByConditionFor = this.sortByConditionFor.bind(this);

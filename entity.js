@@ -7,16 +7,7 @@ class entity {
         this._columns = entityPropertiesMap; //Array of { name: propertyName, type: sqlColumnName } TODO:Always add id as system generated column
         this._queryBuilder = new fpType(entityPropertiesMap);
         this._pgPool = pgPool;
-        let operatorMap = {
-            "like": "singleOperand",
-            "equal": "singleOperand",
-            "greaterThan": "singleOperand",
-            "lessThan": "singleOperand",
-            "ascending": "asc",
-            "descending": "desc",
-            "containsArr": "multiOperand"
-        };
-        this.filterBuilder = new fbType(operatorMap);
+        this.filterBuilder = new fbType();
 
         this.createEntity = this.createEntity.bind(this);
         this.updateEntity = this.updateEntity.bind(this);
