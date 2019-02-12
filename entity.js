@@ -4,7 +4,7 @@ let fbType = require('./filterbuilder');
 class entity {
     constructor(entityName, entityPropertiesMap, pgPool) {
         this._tableName = entityName;
-        this._columns = this._convertKeysToLowerCase(entityPropertiesMap); //Array of { name: propertyName, type: sqlColumnName } TODO:Always add id as system generated column
+        this._columns = entityPropertiesMap; //Array of { name: propertyName, type: sqlColumnName } TODO:Always add id as system generated column
         this._queryBuilder = new fpType(entityPropertiesMap);
         this._pgPool = pgPool;
         let operatorMap = {
@@ -26,7 +26,6 @@ class entity {
         this.deleteEntities = this.deleteEntities.bind(this);
 
         this._constructUpdateClause = this._constructUpdateClause.bind(this);
-        this._convertKeysToLowerCase = this._convertKeysToLowerCase.bind(this);
         this._normalizeColumnName = this._normalizeColumnName.bind(this);
 
         if (Object.keys(this._columns).length <= 0) throw new Error("No columns defined for " + this._tableName + ", for insert operation.");
@@ -65,7 +64,7 @@ class entity {
             updateQuery += this._constructUpdateClause(kvp[0].toLowerCase(), kvp[1], " ", columnsValues);
         });
         updateQuery = updateQuery.substring(0, updateQuery.length - 1);
-        
+
         updateQuery+=" "+ this._queryBuilder.constructWhereClause(filterJson, columnsValues);
         updateQuery += " RETURNING *";
 
@@ -141,14 +140,6 @@ class entity {
         returnClause += '' + sqlColumnName + ' = $' + (argumentArray.length + 1) + ",";
         argumentArray.push(columnvalue);
         return returnClause;
-    }
-
-    _convertKeysToLowerCase(obj) {
-        let output = {};
-        for (let i in obj) {
-            output[i.toLowerCase()] = obj[i];
-        }
-        return output;
     }
 
     _normalizeColumnName(doubleQuotedColumnName) {
