@@ -57,8 +57,7 @@ class entity {
         return response.rows[0];
     }
 
-    async updateEntity(id, propertiesNamesAndValues) {
-        id = parseInt(id);
+    async updateEntity(propertiesNamesAndValues, filterJson) {
         let updateQuery = 'update "' + this._tableName + '" set';
         let columnsValues = [];
 
@@ -66,9 +65,8 @@ class entity {
             updateQuery += this._constructUpdateClause(kvp[0].toLowerCase(), kvp[1], " ", columnsValues);
         });
         updateQuery = updateQuery.substring(0, updateQuery.length - 1);
-
-        updateQuery += this._constructUpdateClause("id", id, " where ", columnsValues)
-        updateQuery = updateQuery.substring(0, updateQuery.length - 1);
+        
+        updateQuery+=" "+ this._queryBuilder.constructWhereClause(filterJson, columnsValues);
         updateQuery += " RETURNING *";
 
         let response = await this._pgPool.query(updateQuery, columnsValues);
