@@ -2,7 +2,7 @@
 # backend-entity
 Simple, minimalist entity framework for [Postgre](https://www.postgresql.org/) wtih [node](http://nodejs.org).
 
-## Usage with Postge
+## Usage with Postgre
 ```js
 let eType = require('backend-entity').entity;
  let propertyMap = {
