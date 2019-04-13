@@ -1,6 +1,6 @@
 {
   "name": "backend-entity",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This packages converts JSON string into pg sql queries; used for client side filter and on server execution",
   "main": "index.js",
   "scripts": {
