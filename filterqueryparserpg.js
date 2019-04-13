@@ -5,12 +5,13 @@ class filterQueryParserPg {
         this._operatorMap = {
             "like": "like",
             "equal": "=",
-            "notequal":"!=",
+            "notequal": "!=",
             "greaterThan": ">",
             "lessThan": "<",
             "ascending": "asc",
             "descending": "desc",
-            "containsArr": "&&"
+            "containsArr": "&&",
+            "in": "Any"
         };
 
         this.constructWhereClause = this.constructWhereClause.bind(this);
@@ -31,6 +32,12 @@ class filterQueryParserPg {
                 case 'notequal':
                     Object.keys(filterObject[operator]).forEach((operand) => {
                         whereClause += (whereClause === "" ? "" : " and ") + ' ' + this._propertyMap[operand] + ' ' + this._operatorMap[operator] + " $" + (argumentArray.length + 1);
+                        argumentArray.push(filterObject[operator][operand]);
+                    });
+                    break;
+                case 'in':
+                    Object.keys(filterObject[operator]).forEach((operand) => {
+                        whereClause += (whereClause === "" ? "" : " and ") + ' ' + this._propertyMap[operand] + ' = ' + this._operatorMap[operator] + " ($" + (argumentArray.length + 1) + ")";
                         argumentArray.push(filterObject[operator][operand]);
                     });
                     break;

@@ -4,12 +4,13 @@ export class filterBuilder {
         let operatorMap = {
             "like": "singleOperand",
             "equal": "singleOperand",
-            "notequal":"singleOperand",
+            "notequal": "singleOperand",
             "greaterThan": "singleOperand",
             "lessThan": "singleOperand",
             "ascending": "asc",
             "descending": "desc",
-            "containsArr": "multiOperand"
+            "containsArr": "multiOperand",
+            "in": "singleOperand"
         };
         this.addOperatorConditionFor = this.addOperatorConditionFor.bind(this);
         this.removeOperatorConditionFor = this.removeOperatorConditionFor.bind(this);

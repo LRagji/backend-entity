@@ -9,7 +9,8 @@ class filterBuilder {
             "lessThan": "singleOperand",
             "ascending": "asc",
             "descending": "desc",
-            "containsArr": "multiOperand"
+            "containsArr": "multiOperand",
+            "in":"singleOperand"
         };
         this.addOperatorConditionFor = this.addOperatorConditionFor.bind(this);
         this.removeOperatorConditionFor = this.removeOperatorConditionFor.bind(this);
